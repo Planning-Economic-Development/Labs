@@ -1,80 +1,76 @@
-##########################################
-#   URP-5493: PLanning & Econ Development
+##################################################
+#   URP-5493: Planning & Econ Development
 #   Prof: Esteban Lopez Ochoa, PhD
-#   Lab 1: Regional Economic Profiles
-##########################################
-
-#https://apps.bea.gov/itable/index.cfm
-#https://www.bea.gov/news/2021/gross-domestic-product-county-2020
-#https://apps.bea.gov/API/signup/index.cfm
-
-#https://github.com/us-bea/bea.R
-#https://jwrchoi.com/post/how-to-use-bureau-of-economic-analysis-bea-api-in-r/
+#   Lab 1: Measures of Regional Economic Activity
+#################################################
 
 
-#-------- Part 0: Setting up data access ----
-install.packages("bea.R")
-library(bea.R)
+#-------- Part 0: Loading and Manipulating Data ----
 
-install.packages(c('devtools', 'httr'))
-library(httr)
-library(devtools)
+# Website to explore the data: https://www.bea.gov 
 
-httr::set_config( config( ssl_verifypeer = 0L ))
-devtools::install_github('us-bea/bea.R')
+# website to download the raw data: https://apps.bea.gov/regional/downloadzip.cfm
 
 
+
+#loading the data
 library(data.table)
+gdp_tx<-fread("01_Lab/CAGDP2_TX_2001_2020.csv")
 
-myAPIkey<-"99BD2068-C8C5-4E24-B4E0-7FB2E8E1E693"
-
-?beaSets
-
-beaSets(beaKey = myAPIkey)
-
-beaParams(beaKey = myAPIkey,setName = 'GDPbyIndustry')
-
-beaParamVals(beaKey = myAPIkey,setName = 'GDPbyIndustry',paramName = 'TableID')
-beaParamVals(beaKey = myAPIkey,setName = 'GDPbyIndustry',paramName = 'Industry')
-beaParamVals(beaKey = myAPIkey,setName = 'GDPbyIndustry',paramName = 'Year')
+#cleaning the data
 
 
-userSpecList <- list('UserID' = '99BD2068-C8C5-4E24-B4E0-7FB2E8E1E693' ,
-                     'Method' = 'GetData',
-                     'datasetname' = 'GDPbyIndustry',
-                     'Frequency' = 'A',
-                     'Industry' = 'II',
-                     'TableID' = '16',
-                     'Year' = '2020',
-                     'ResultFormat' = 'json'
-                     )	
-
-userSpecList <- list('UserID' = '99BD2068-C8C5-4E24-B4E0-7FB2E8E1E693' ,
-                     'Method' = 'GetData',
-                     'datasetname' = 'NIPA',
-                     'Frequency' = 'A',
-                     'TableID' = '68',
-                     'Year' = 'X')	
+# Can we create a bar plot for Bexar's GDP by industry
 
 
-?beaGet
-resp <- beaGet(userSpecList,asTable = F)
-BL <- bea2List(resp)
-BDT <- bea2Tab(resp)
 
-beaSpecs <- list(
-  'UserID' = myAPIkey ,
-  'Method' = 'GetData',
-  'datasetname' = 'NIPA',
-  'TableName' = 'T20305',
-  'Frequency' = 'Q',
-  'Year' = 'X',
-  'ResultFormat' = 'json'
-);
-beaPayload <- beaGet(beaSpecs);
 
-beaLong <- beaGet(beaSpecs, asWide = FALSE)
+#---------------------------
+# Primacy Index
+#---------------------------
+# Description: 
+#   Measures what is the economic sector of a region r that has
+# 	the highest share in the total of the economic activity of that
+#	region.
+# Formula:
+#   P_rs=max(x_sr/X_r)
+#		X_r	: Total economic Activity of a region r
+#		x_sr	: Economic Activity of sector s at region r		 
 
-#-------- Part 1: Regional Economic Profiles ----
+
+
+
+#---------------------------
+# Location Quotient
+#---------------------------
+# Description: 
+#   Measures the relative specialization of an economic sector of a 
+# 	region r.
+# Formula:
+#	S_sr=
+#   Q_rs=∑(x_sr/X_r)/(x_sR/X_SR)
+#		x_sr	: Economic Activity of sector s at region r		 
+#		X_r	: Total economic Activity of a region r
+#		x_sR	: Economic Activity of sector s in all regions (reference)		 
+#		X_SR	: Total economic Activity in all sectors and all regions
+
+
+
+#---------------------------
+# Market Potential
+#---------------------------
+# Description: 
+#   Measures the accessibility of a spatial unit (r) to the rest of
+#   markets in an area of analysis. It weights to the economic activity
+#   of region r with respect to the distance of r to the rest of the regions
+#   in the area of analysis R-ri={r1,..-ri.,R}
+# Formula:
+#   MP_ri=∑_j(P_rj/D_rirj)
+#		D_rirj: Distance between region ri and rj
+#		P_ri	: Economic Activity at rj		 
+
+
+
+
 
 
