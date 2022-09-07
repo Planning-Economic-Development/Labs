@@ -20,6 +20,16 @@ gdp_tx<-fread("01_Lab/CAGDP2_TX_2001_2020.csv")
 #cleaning the data
 
 
+# Can we create a bar plot that shows where does Bexar's GDP falls within Texas?
+library(ggplot2)
+options(scipen = 999)
+gdp_tx[,gdp_2020:=as.numeric(`2020`)]
+summary(gdp_tx$gdp_2020)
+
+
+ggplot(data = gdp_tx[Description=="All industry total" & GeoName!="Texas" & gdp_2020> 2348820,],aes(y=reorder(GeoName,gdp_2020),x=gdp_2020))+
+  geom_bar(stat = 'identity')
+
 # Can we create a bar plot for Bexar's GDP by industry
 
 
