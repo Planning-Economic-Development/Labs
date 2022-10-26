@@ -32,8 +32,10 @@ ggplot(data = gdp_tx[Description=="All industry total" & GeoName!="Texas" & gdp_
 
 # Can we create a bar plot for Bexar's GDP by industry
 
+bexar<-gdp_tx[GeoName=="Bexar, TX",]
 
-
+ggplot(data = bexar[IndustryClassification!="...",],aes(y=reorder(Description,gdp_2020),x=gdp_2020))+
+  geom_bar(stat = "identity")
 
 #---------------------------
 # Primacy Index
@@ -47,7 +49,16 @@ ggplot(data = gdp_tx[Description=="All industry total" & GeoName!="Texas" & gdp_
 #		X_r	: Total economic Activity of a region r
 #		x_sr	: Economic Activity of sector s at region r		 
 
+X_r<-gdp_tx[GeoName=="Texas" & Description=="All industry total",gdp_2020]
 
+gdp_tx[IndustryClassification!="...",share:=gdp_2020/X_r]
+
+PI<-gdp_tx[GeoName!="Texas",.(share=max(share,na.rm = T)),by=.(GeoName)]
+
+PI<-merge(PI,gdp_tx[,.(GeoName,Description,share)],by=c('GeoName','share'),all.x = T,sort=FALSE)
+
+ggplot(data = PI[share>=quantile(share,0.75)],aes(y=reorder(GeoName,share),x=share,group=Description, fill=Description))+
+  geom_bar(stat = "identity")
 
 
 #---------------------------
