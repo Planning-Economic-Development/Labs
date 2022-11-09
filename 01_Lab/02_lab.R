@@ -47,7 +47,7 @@ A[1,]<-x[1,]/IOM["X",1:2]
 A[2,]<-x[2,]/IOM["X",1:2]
 
 #Value added technical coefficients
-Va<-F/IOM["X",1:2]
+Va<-VA/IOM["X",1:2]
 
 
 #Leontief Matrix
@@ -91,9 +91,11 @@ Ystar<-matrix(c(20,0),ncol = 1,nrow = 2)
 
 Prod.Impact <- t(O)*Ystar
 Prod.Impact
+
 #2. Economic impact on income
 Income.Impact <- t(H)*Ystar
 Income.Impact
+
 #3. Economic impact on employment
 Emp.Impact <- t(E)*Ystar
 Emp.Impact
